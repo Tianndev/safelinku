@@ -10,6 +10,8 @@ Alat ini mengotomatiskan proses navigasi URL SafeLinkU, dirancang untuk tujuan p
 - **Kemampuan Stealth**: Mengimplementasikan berbagai teknik untuk menghindari mekanisme deteksi bot.
 - **Operasi Headless**: Berjalan di latar belakang tanpa antarmuka browser yang terlihat untuk efisiensi.
 
+![Preview Tools](data/image.png)
+
 ## Prasyarat
 
 Pastikan perangkat lunak berikut terinstal di sistem Anda sebelum melanjutkan:
