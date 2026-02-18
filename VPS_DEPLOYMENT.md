@@ -1,21 +1,19 @@
-# Running SafeLinkU on VPS
+# Menjalankan SafeLinkU di VPS
 
-Complete guide untuk deploy dan run `safelinku.js` di VPS (Ubuntu/Debian).
+Panduan lengkap untuk deploy dan menjalankan `main.js` di VPS (Ubuntu/Debian).
 
-## Prerequisites
+## Prasyarat
 
 - VPS dengan minimal 2GB RAM
 - Ubuntu 20.04+ atau Debian 10+
-- SSH access ke VPS
-- Node.js 16+ installed
+- Akses SSH ke VPS
+- Node.js 16+ terinstal
 
-## Step 1: Install System Dependencies
+## Langkah 1: Instal Dependensi Sistem
 
 ```bash
-# Update package list
 sudo apt-get update
 
-# Install Chromium and required libraries
 sudo apt-get install -y \
     chromium-browser \
     libgbm-dev \
@@ -32,50 +30,46 @@ sudo apt-get install -y \
     xdg-utils
 ```
 
-## Step 2: Install Node.js (if not installed)
+## Langkah 2: Instal Node.js (jika belum terinstal)
 
 ```bash
-# Install Node.js 20.x
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
-# Verify installation
 node --version
 npm --version
 ```
 
-## Step 3: Upload Project Files
+## Langkah 3: Upload File Proyek
 
-### Option A: Using SCP
+### Opsi A: Menggunakan SCP
 ```bash
-# From your local machine
-scp -r vizey user@your-vps-ip:/home/user/
+scp -r safelinku user@your-vps-ip:/home/user/
 ```
 
-### Option B: Using Git
+### Opsi B: Menggunakan Git
 ```bash
-# On VPS
 cd ~
 git clone your-repo-url
-cd vizey
+cd safelinku
 ```
 
-## Step 4: Install Project Dependencies
+## Langkah 4: Instal Dependensi Proyek
 
 ```bash
-cd vizey
+cd safelinku
 npm install
 ```
 
-## Step 5: Configure URLs
+## Langkah 5: Konfigurasi URL
 
-Edit file `data/safelinku.txt` dengan URLs yang ingin diproses:
+Edit file `data/safelinku.txt` dengan URL yang ingin diproses:
 
 ```bash
 nano data/safelinku.txt
 ```
 
-Paste URLs, satu per line:
+Tempelkan URL, satu per baris:
 ```
 https://sfl.gl/mXSTMKoX
 https://sfl.gl/ucSVUfFT
@@ -83,9 +77,9 @@ https://sfl.gl/LMv8mHzE
 ...
 ```
 
-## Step 6: Adjust Configuration (Optional)
+## Langkah 6: Sesuaikan Konfigurasi (Opsional)
 
-Edit `safelinku.js` untuk tuning performance:
+Edit `safelinku.js` untuk menyetel performa:
 
 ```javascript
 const CONFIG = {
@@ -95,132 +89,104 @@ const CONFIG = {
     stepDelay: 2000,
     countdownDelay: 10,
     maxRetries: 5,
-    concurrency: 10,  // Increase untuk VPS powerful
+    concurrency: 10,
 };
 ```
 
-**Recommendations:**
-- **2 CPU cores**: `concurrency: 5`
-- **4 CPU cores**: `concurrency: 10`
-- **8+ CPU cores**: `concurrency: 15-20`
+**Rekomendasi:**
+- **2 Core CPU**: `concurrency: 5`
+- **4 Core CPU**: `concurrency: 10`
+- **8+ Core CPU**: `concurrency: 15-20`
 
-## Step 7: Run Script
+## Langkah 7: Jalankan Script
 
-### Option A: Foreground (for testing)
+### Opsi A: Foreground (untuk pengujian)
 ```bash
 npm run safelink
 ```
 
-### Option B: Background with nohup
+### Opsi B: Background dengan nohup
 ```bash
 nohup npm run safelink > safelink.log 2>&1 &
 
-# Check logs
 tail -f safelink.log
 
-# Check process
 ps aux | grep safelinku.js
 ```
 
-### Option C: Using Screen (Recommended)
+### Opsi C: Menggunakan Screen (Disarankan)
 ```bash
-# Install screen
 sudo apt-get install screen
 
-# Start new screen session
 screen -S safelink
 
-# Run script
 npm run safelink
 
-# Detach from screen: Ctrl+A then D
+Ctrl+A lalu D
 
-# Reattach later
 screen -r safelink
-
-# List sessions
 screen -ls
 ```
 
-### Option D: Using PM2 (Production)
+### Opsi D: Menggunakan PM2 (Produksi)
 ```bash
-# Install PM2
 sudo npm install -g pm2
 
-# Start script
 pm2 start npm --name "safelink" -- run safelink
 
-# Check status
 pm2 status
 
-# View logs
 pm2 logs safelink
 
-# Stop
 pm2 stop safelink
 
-# Restart
 pm2 restart safelink
 
-# Auto-start on VPS reboot
 pm2 startup
 pm2 save
 ```
 
-## Step 8: Monitor Progress
+## Langkah 8: Pantau Proses
 
-### View Logs
+### Lihat Log
 ```bash
-# If using nohup
 tail -f safelink.log
-
-# If using PM2
 pm2 logs safelink
-
-# If using screen
 screen -r safelink
 ```
 
-### Monitor System Resources
+### Pantau Sumber Daya Sistem
 ```bash
-# Install htop
 sudo apt-get install htop
 
-# Monitor CPU & Memory
 htop
-
-# Check disk space
 df -h
 ```
 
-## Step 9: Stop Script
+## Langkah 9: Hentikan Script
 
-### If running in foreground
+### Jika berjalan di foreground
 ```bash
 Ctrl+C
 ```
 
-### If running with nohup
+### Jika berjalan dengan nohup
 ```bash
-# Find process ID
 ps aux | grep safelinku.js
-
-# Kill process
 kill <PID>
 ```
 
-### If using screen
+### Jika menggunakan screen
 ```bash
 screen -r safelink
-# Then press Ctrl+C
 ```
 
-### If using PM2
+### Jika menggunakan PM2
 ```bash
 pm2 stop safelink
 ```
 
-## Expected Output
+## Output yang Diharapkan
 
 ```
 Proxy Mode  : SOCKS (Enabled)
@@ -248,78 +214,74 @@ Avg Duration    : 12.5s/url
 ══════════════════════════════════════════════════════════════════════
 ```
 
-## Troubleshooting
+## Pemecahan Masalah
 
 ### Error: "No usable sandbox!"
 ```bash
-# Add to browser args (already included)
 --no-sandbox
 --disable-setuid-sandbox
 ```
 
 ### Error: "Cannot find module chromium"
 ```bash
-# Install chromium
 sudo apt-get install chromium-browser
 ```
 
 ### Error: "Failed to launch browser"
 ```bash
-# Install missing dependencies
 sudo apt-get install -y libgbm-dev libnss3 libatk-bridge2.0-0
 ```
 
-### High Memory Usage
+### Penggunaan Memori Tinggi
 ```bash
-# Reduce concurrency
-concurrency: 3  # Instead of 10
+concurrency: 5
 ```
 
-### Script Hangs
+### Script Macet (Hangs)
 ```bash
-# Reduce timeout
-timeout: 30000  # Instead of 40000
+timeout: 30000
 ```
 
-## Performance Tips
+## Tips Performa
 
-1. **Use PM2** - Auto-restart on crash, log management
-2. **Increase concurrency** - Based on CPU cores
-3. **Monitor memory** - Use `htop` to watch usage
-4. **Use screen/tmux** - Keep session alive after SSH disconnect
-5. **Regular cleanup** - Clear logs periodically
+1. **Gunakan PM2** - Restart otomatis saat crash, manajemen log
+2. **Tingkatkan concurrency** - Berdasarkan core CPU
+3. **Pantau memori** - Gunakan `htop` untuk melihat penggunaan
+4. **Gunakan screen/tmux** - Jaga sesi tetap hidup setelah SSH terputus
+5. **Pembersihan rutin** - Hapus log secara berkala
 
-## Security Notes
+## Catatan Keamanan
 
-- ✅ Script uses proxies (VPS IP hidden)
-- ✅ Headless mode (no GUI required)
-- ✅ No sensitive data logged
-- ⚠️ Keep `safelinku.txt` secure (contains URLs)
+- ✅ Script menggunakan proxy (IP VPS tersembunyi)
+- ✅ Mode headless (tidak memerlukan GUI)
+- ✅ Tidak ada data sensitif yang dicatat
+- ⚠️ Jaga keamanan `safelinku.txt` (poin ini berisi URL)
 
-## Automation
+## Otomatisasi
 
-### Cron Job (Run daily at 2 AM)
+### Cron Job (Jalankan setiap jam 2 pagi)
 ```bash
-# Edit crontab
 crontab -e
 
-# Add line:
-0 2 * * * cd /home/user/vizey && /usr/bin/npm run safelink >> /home/user/vizey/cron.log 2>&1
+0 2 * * * cd /home/user/safelinku && /usr/bin/npm run safelink >> /home/user/safelinku/cron.log 2>&1
 ```
 
-### PM2 Auto-restart on Crash
+### PM2 Auto-restart saat Crash
 ```bash
 pm2 start npm --name "safelink" --max-restarts 3 -- run safelink
 ```
 
-## Support
+## Bantuan
 
-For issues, check:
-1. System logs: `journalctl -xe`
-2. Application logs: `pm2 logs safelink`
-3. Memory usage: `free -h`
-4. Disk space: `df -h`
+Untuk masalah, periksa:
+1. Log sistem: `journalctl -xe`
+2. Log aplikasi: `pm2 logs safelink`
+3. Penggunaan memori: `free -h`
+4. Ruang disk: `df -h`
 
 ---
 
-**Ready to deploy!** 🚀
+**Siap untuk deploy!**
+
+---
+Licensed by Dakila Universe
