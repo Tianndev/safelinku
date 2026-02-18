@@ -28,7 +28,7 @@ Ikuti langkah-langkah ini untuk menyiapkan proyek secara lokal:
 1.  **Clone Repositori**
 
     ```bash
-    git clone https://github.com/DakilaUniverse/safelinku.git
+    git clone https://github.com/Tianndev/safelinku.git
     cd safelinku
     ```
 
