@@ -1,94 +1,86 @@
-# SafeLinkU Automation Tool
+# SafeLinkU Link Navigator
 
-Alat ini mengotomatiskan proses navigasi URL SafeLinkU, dirancang untuk tujuan pengujian dan simulasi traffic. Fitur utamanya mencakup dukungan rotasi proxy, pemrosesan multi-threading untuk konkurensi, dan otomatisasi browser menggunakan Puppeteer.
+Solusi otomatisasi navigasi tautan SafeLinkU yang dibangun di atas Puppeteer. Dirancang dengan arsitektur multi-worker konkuren, rotasi proxy SOCKS otomatis, dan emulasi browser mobile untuk memastikan keandalan navigasi yang optimal.
 
 ## Fitur
 
-- **Navigasi Otomatis**: Menangani seluruh alur navigasi tautan SafeLinkU.
-- **Dukungan Proxy**: Secara otomatis mengambil dan menggunakan proxy SOCKS4/5 untuk menyembunyikan alamat IP.
-- **Pemrosesan Konkuren**: Mendukung eksekusi multi-thread untuk memproses banyak URL secara bersamaan.
-- **Kemampuan Stealth**: Mengimplementasikan berbagai teknik untuk menghindari mekanisme deteksi bot.
-- **Operasi Headless**: Berjalan di latar belakang tanpa antarmuka browser yang terlihat untuk efisiensi.
+- **Navigasi Otomatis** — Mengelola seluruh alur navigasi tautan SafeLinkU dari awal hingga selesai.
+- **Rotasi Proxy SOCKS** — Mengambil dan merotasi proxy SOCKS4/5 dari sumber publik secara otomatis.
+- **Pemrosesan Konkuren** — Menjalankan beberapa worker secara paralel untuk throughput maksimal.
+- **Emulasi Browser Mobile** — Mensimulasikan perilaku browser mobile nyata untuk navigasi yang konsisten dan andal.
+- **Filter Iklan** — Memblokir request domain iklan secara otomatis untuk mempercepat waktu muat halaman.
+- **Operasi Headless** — Berjalan sepenuhnya di latar belakang tanpa antarmuka visual.
 
 ![Preview Tools](data/image.png)
 
 ## Prasyarat
 
-Pastikan perangkat lunak berikut terinstal di sistem Anda sebelum melanjutkan:
+Pastikan perangkat lunak berikut telah terpasang sebelum memulai:
 
-- **Node.js**: Versi 16.0.0 atau lebih tinggi.
-- **NPM**: Node Package Manager (biasanya disertakan dengan Node.js).
-- **Git**: Untuk mengkloning repositori.
-- **Koneksi Internet Stabil**: Diperlukan untuk pengambilan proxy dan navigasi.
+- **Node.js** `>= 16.0.0`
+- **NPM** — Node Package Manager (sudah termasuk dalam paket Node.js)
+- **Git** — Untuk mengkloning repositori
+- **Koneksi Internet Stabil** — Diperlukan untuk pengambilan proxy dan proses navigasi
 
 ## Instalasi
 
-Ikuti langkah-langkah ini untuk menyiapkan proyek secara lokal:
-
-1.  **Clone Repositori**
+1. **Clone Repositori**
 
     ```bash
     git clone https://github.com/Tianndev/safelinku.git
     cd safelinku
     ```
 
-2.  **Instal Dependensi**
-
-    Instal paket Node.js yang diperlukan dengan menjalankan:
+2. **Instal Dependensi**
 
     ```bash
     npm install
     ```
 
-    Perintah ini akan menginstal Puppeteer, agen proxy, dan pustaka lain yang diperlukan yang didefinisikan dalam `package.json`.
-
 ## Konfigurasi
 
-### URL Target
+### Daftar URL
 
-Buat file bernama `safelinku.txt` di dalam direktori `data`. Tambahkan URL SafeLinkU target, satu per baris. Jika direktori tidak ada, buat terlebih dahulu.
+Buat file `safelinku.txt` di dalam direktori `data/`, lalu isi dengan URL SafeLinkU target — satu URL per baris.
 
-**Jalur File:** `data/safelinku.txt`
+**Lokasi:** `data/safelinku.txt`
 
-**Contoh Konten:**
 ```text
 https://sfl.gl/contoh1
 https://sfl.gl/contoh2
 https://sfl.gl/contoh3
 ```
 
-### Pengaturan Lanjutan
+### Parameter Lanjutan
 
-Anda dapat menyesuaikan parameter operasional dengan memodifikasi objek `CONFIG` di dalam file `main.js`:
+Sesuaikan konfigurasi melalui objek `CONFIG` di dalam `main.js`:
 
 ```javascript
 const CONFIG = {
-    useProxy: true,       // Set ke false untuk menonaktifkan penggunaan proxy
-    headless: 'new',      // 'new' untuk mode headless, false untuk browser terlihat
-    timeout: 40000,       // Waktu maksimum (ms) menunggu operasi
-    stepDelay: 500,       // Jeda (ms) antar langkah navigasi
-    countdownDelay: 10,   // Durasi hitung mundur (detik) pada halaman
-    maxRetries: 2,        // Upaya percobaan ulang maksimum untuk URL yang gagal
-    concurrency: 5,       // Jumlah instansi browser konkuren
+    useProxy: true,       // Aktifkan/nonaktifkan proxy
+    headless: 'new',      // 'new' = headless, false = tampilkan browser
+    timeout: 40000,       // Batas waktu operasi (ms)
+    stepDelay: 500,       // Jeda antar langkah navigasi (ms)
+    countdownDelay: 10,   // Durasi hitung mundur pada halaman (detik)
+    maxRetries: 2,        // Batas percobaan ulang untuk URL yang gagal
+    concurrency: 5,       // Jumlah worker yang berjalan bersamaan
 };
 ```
 
 ## Penggunaan
 
-Untuk memulai proses otomatisasi, jalankan perintah berikut di terminal Anda:
-
 ```bash
 npm run safelink
 ```
 
-Aplikasi akan menginisialisasi, mengambil proxy yang tersedia, dan mulai memproses URL yang terdaftar di `data/safelinku.txt`. Kemajuan dan status akan ditampilkan di konsol.
+Setelah dijalankan, aplikasi akan mengambil daftar proxy, lalu mulai memproses setiap tautan secara konkuren. Status dan laporan akhir akan ditampilkan langsung di terminal.
 
 ## Penafian
 
-Perangkat lunak ini disediakan hanya untuk tujuan pendidikan dan pengujian. Penulis tidak bertanggung jawab atas penyalahgunaan alat ini atau atas konsekuensi apa pun yang diakibatkan oleh penggunaannya. Pengguna bertanggung jawab penuh untuk memastikan tindakan mereka mematuhi semua hukum dan ketentuan layanan yang berlaku.
+Perangkat lunak ini disediakan semata-mata untuk keperluan riset, edukasi, dan pengujian teknis. Penulis tidak bertanggung jawab atas segala bentuk penyalahgunaan atau konsekuensi yang timbul dari penggunaan alat ini. Pengguna sepenuhnya bertanggung jawab untuk memastikan kepatuhan terhadap hukum dan ketentuan layanan yang berlaku.
 
 ## Lisensi
 
 Hak Cipta © 2026 **Dakila Universe**. Semua Hak Dilindungi.
 
-Penyalinan, modifikasi, distribusi, atau penggunaan perangkat lunak ini secara tidak sah sangat dilarang tanpa izin tertulis dari pemegang hak cipta.
+Dilarang keras menyalin, memodifikasi, mendistribusikan, atau menggunakan perangkat lunak ini tanpa izin tertulis dari pemegang hak cipta.
